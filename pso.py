@@ -11,9 +11,10 @@ class ParticleSwarmOptimizedClustering:
                  n_cluster: int,
                  data: np.ndarray,
                  n_particles: int= 20,
-                 dec_w : float = 0.001,
-                 c1: float = 0.5,
-                 c2: float = 0.3,
+                 w: float=1,
+                 dump_w : float = 0.99,
+                 c1: float = 2,
+                 c2: float = 2,
                  hybrid: bool = True,
                  max_iter: int = 100,
                  print_debug: int = 10):
@@ -23,7 +24,8 @@ class ParticleSwarmOptimizedClustering:
         self.max_iter = max_iter
         self.particles = []
         self.hybrid = hybrid
-        self.dec_w = dec_w
+        self.w = w
+        self.dump_w = dump_w
         self.c1 = c1
         self.c2 = c2
         self.print_debug = print_debug
@@ -36,9 +38,9 @@ class ParticleSwarmOptimizedClustering:
         for i in range(self.n_particles):
             particle = None
             if i == 0 and self.hybrid:
-                particle = Particle(self.n_cluster, self.data, dec_w=self.dec_w,c1=self.c1,c2=self.c2, use_kmeans=True)
+                particle = Particle(self.n_cluster, self.data,w=self.w, dump_w=self.dump_w,c1=self.c1,c2=self.c2, use_kmeans=True)
             else:
-                particle = Particle(self.n_cluster, self.data,dec_w=self.dec_w,c1=self.c1,c2=self.c2, use_kmeans=False)
+                particle = Particle(self.n_cluster, self.data,w=self.w,dump_w=self.dump_w,c1=self.c1,c2=self.c2, use_kmeans=False)
             if particle.best_score < self.gbest_score:
                 self.gbest_centroids = particle.centroids.copy()
                 self.gbest_score = particle.best_score

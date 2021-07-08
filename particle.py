@@ -27,7 +27,7 @@ class Particle:
                  data: np.ndarray,
                  use_kmeans: bool = False,
                  w: float = 0.9,
-                 dec_w: float = 0.001,
+                 dump_w: float = 0.99,
                  w_thresh : float = 0.4,
                  c1: float = 0.5,
                  c2: float = 0.3):
@@ -42,7 +42,7 @@ class Particle:
         self.best_sse = calc_sse(self.centroids, self._predict(data), data)
         self.velocity = np.zeros_like(self.centroids)
         self._w = w
-        self._dec_w = dec_w
+        self._dec_w = dump_w
         self._w_thresh =w_thresh
         self._c1 = c1
         self._c2 = c2
@@ -65,7 +65,7 @@ class Particle:
         if(self._w <= self._w_thresh):
            self._w = self._w_thresh
            return 
-        self._w -= self._dec_w * np.random.random()
+        self._w = self._dec_w * self._w
         
 
     def _update_velocity(self, gbest_position: np.ndarray):
