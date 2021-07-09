@@ -38,8 +38,8 @@ class Particle:
             kmeans.fit(data)
             self.centroids = kmeans.centroid.copy()
         self.best_position = self.centroids.copy()
-        self.best_score = quantization_error(self.centroids, self._predict(data), data)
         self.best_sse = calc_sse(self.centroids, self._predict(data), data)
+        self.best_score = self.best_sse
         self.velocity = np.zeros_like(self.centroids)
         self._w = w
         self._dec_w = dump_w
@@ -63,8 +63,8 @@ class Particle:
 
     def _update_inertia(self):
         if(self._w <= self._w_thresh):
-           self._w = self._w_thresh
-           return 
+            self._w = self._w_thresh
+            return 
         self._w = self._dec_w * self._w
         
 
@@ -82,8 +82,8 @@ class Particle:
         new_score = quantization_error(self.centroids, self._predict(data), data)
         sse = calc_sse(self.centroids, self._predict(data), data)
         self.best_sse = min(sse, self.best_sse)
-        if new_score < self.best_score:
-            self.best_score = new_score
+        if self.best_sse < self.best_score:
+            self.best_score = self.best_sse
             self.best_position = self.centroids.copy()
 
     def _predict(self, data: np.ndarray) -> np.ndarray:
