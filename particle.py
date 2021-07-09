@@ -34,7 +34,7 @@ class Particle:
         index = np.random.choice(list(range(len(data))), n_cluster)
         self.centroids = data[index].copy()
         if use_kmeans:
-            kmeans = KMeans(n_cluster=n_cluster, init_pp=False)
+            kmeans = KMeans(n_cluster=n_cluster, init_pp=True)
             kmeans.fit(data)
             self.centroids = kmeans.centroid.copy()
         self.best_position = self.centroids.copy()
@@ -58,7 +58,6 @@ class Particle:
         """
         self._update_velocity(gbest_position)
         self._update_centroids(data)
-        #TODO Update w to reduce it 
         self._update_inertia()
 
     def _update_inertia(self):
