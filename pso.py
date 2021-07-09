@@ -32,6 +32,7 @@ class ParticleSwarmOptimizedClustering:
         self.gbest_score = np.inf
         self.gbest_centroids = None
         self.gbest_sse = np.inf
+        self.gbest_quantization =np.inf
         self._init_particles()
 
     def _init_particles(self):
@@ -46,6 +47,7 @@ class ParticleSwarmOptimizedClustering:
                 self.gbest_score = particle.best_score
             self.particles.append(particle)
             self.gbest_sse = min(particle.best_sse, self.gbest_sse)
+            self.gbest_quantization = min(particle.best_quantization,self.gbest_quantization)
 
     def run(self):
         print('Initial global best score', self.gbest_score)
@@ -58,6 +60,7 @@ class ParticleSwarmOptimizedClustering:
                 if particle.best_score < self.gbest_score:
                     self.gbest_centroids = particle.centroids.copy()
                     self.gbest_score = particle.best_score
+                    self.gbest_quantization = particle.best_quantization
             history.append(self.gbest_score)
             if i % self.print_debug == 0:
                 print('Iteration {:04d}/{:04d} current gbest score {:.18f}'.format(

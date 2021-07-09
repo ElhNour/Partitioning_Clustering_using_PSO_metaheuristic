@@ -38,6 +38,7 @@ class Particle:
             kmeans.fit(data)
             self.centroids = kmeans.centroid.copy()
         self.best_position = self.centroids.copy()
+        self.best_quantization = quantization_error(self.centroids, self._predict(data), data)
         self.best_sse = calc_sse(self.centroids, self._predict(data), data)
         self.best_score = self.best_sse
         self.velocity = np.zeros_like(self.centroids)
@@ -78,12 +79,13 @@ class Particle:
 
     def _update_centroids(self, data: np.ndarray):
         self.centroids = self.centroids + self.velocity
-        new_score = quantization_error(self.centroids, self._predict(data), data)
+        #new_score = quantization_error(self.centroids, self._predict(data), data)
         sse = calc_sse(self.centroids, self._predict(data), data)
         self.best_sse = min(sse, self.best_sse)
         if self.best_sse < self.best_score:
             self.best_score = self.best_sse
             self.best_position = self.centroids.copy()
+            self.best_quantization = quantization_error(self.centroids, self._predict(data), data)
 
     def _predict(self, data: np.ndarray) -> np.ndarray:
         """Predict new data's cluster using minimum distance to centroid
