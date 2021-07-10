@@ -30,11 +30,13 @@ class Particle:
                  dump_w: float = 0.99,
                  w_thresh : float = 0.4,
                  c1: float = 0.5,
-                 c2: float = 0.3):
+                 c2: float = 0.3,
+                 seed = 2021):
+        np.random.seed(seed)
         index = np.random.choice(list(range(len(data))), n_cluster)
         self.centroids = data[index].copy()
         if use_kmeans:
-            kmeans = KMeans(n_cluster=n_cluster, init_pp=True)
+            kmeans = KMeans(n_cluster = n_cluster, init_pp = False, seed=2018)
             kmeans.fit(data)
             self.centroids = kmeans.centroid.copy()
         self.best_position = self.centroids.copy()
